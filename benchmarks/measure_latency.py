@@ -4,6 +4,7 @@ import requests
 
 
 def query_ollama(model: str, prompt: str):
+    """Send a prompt to the Ollama API and measure response latency and token count."""
     start_time = time.time()
     response = requests.post(
         "http://localhost:11434/api/generate",
@@ -16,6 +17,7 @@ def query_ollama(model: str, prompt: str):
 
 
 def log_memory_usage():
+    """Get current memory usage of the Python process in MB."""
     process = psutil.Process()
     return round(process.memory_info().rss / (1024 * 1024), 2)
 
