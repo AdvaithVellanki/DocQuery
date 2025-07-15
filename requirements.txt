@@ -2,3 +2,5 @@ requests
 psutil
 beautifulsoup4
 langchain
+faiss-cpu
+sentence-transformers
