@@ -80,6 +80,25 @@ def embed_and_save():
     print(f"[✔] Saved FAISS index with {len(chunks)} chunks.")
 
 
+# Retriever logic to return top-k relevant chunks
+def retrieve(query, top_k=3):
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+    index = faiss.read_index(os.path.join(EMBEDDING_DIR, "faiss.index"))
+    with open(os.path.join(EMBEDDING_DIR, "sources.pkl"), "rb") as f:
+        sources = pickle.load(f)
+
+    query_emb = model.encode([query])
+    D, I = index.search(np.array(query_emb), top_k)
+
+    results = []
+    for idx in I[0]:
+        results.append({"chunk": idx, "source": sources[idx]})
+    return results
+
+
 if __name__ == "__main__":
     chunk_and_save()
     embed_and_save()
+    q = "How do I create a coroutine in asyncio?"
+    retrieved = retrieve(q)
+    print(f"Top results for '{q}':\n", retrieved)
